@@ -35,6 +35,18 @@ func _physics_process(delta: float) -> void:
 			var bonus = 1
 			if (velocity.length() < velocity_vector_length_limit):
 				bonus = velocity_bonus
-			var new_velocity = -velocity.reflect(normal)*bonus
+			var reflection_vector = velocity.reflect(normal)
+			
+			var degs = rad_to_deg(Vector2.UP.angle_to(reflection_vector))
+			var degs180 = fmod(degs, 180)
+			
+			if abs(degs180) > 135 :
+				reflection_vector.y = -0.4 * reflection_vector.length()
+				reflection_vector.x = 1.4 * reflection_vector.length()
+			elif abs(degs180) < 45:
+				reflection_vector.y = 0.4 * reflection_vector.length()
+				reflection_vector.x = 1.4 * reflection_vector.length()
+				
+			var new_velocity = -reflection_vector*bonus
 			velocity = new_velocity
 		
