@@ -1,0 +1,313 @@
+[gd_scene load_steps=19 format=3 uid="uid://c6cvo6lrd2i6p"]
+
+[ext_resource type="Texture2D" uid="uid://cpbr8eu4wg0c6" path="res://textures/platform.jpg" id="1_2l5nk"]
+[ext_resource type="Script" path="res://scripts/game_logic.gd" id="1_j2hm1"]
+[ext_resource type="Script" path="res://scripts/platform.gd" id="1_tmvxg"]
+[ext_resource type="Script" path="res://scripts/platform_state_machine.gd" id="3_r5r0q"]
+[ext_resource type="Script" path="res://scripts/idle_platform_state.gd" id="4_ti3f0"]
+[ext_resource type="Script" path="res://scripts/moving_platform_state.gd" id="5_wfngb"]
+[ext_resource type="Texture2D" uid="uid://cplfhv7v00agn" path="res://textures/ball.jpg" id="6_bul4m"]
+[ext_resource type="Script" path="res://scripts/ball.gd" id="6_tiq4j"]
+[ext_resource type="Script" path="res://scripts/goal_area.gd" id="9_qfmhi"]
+[ext_resource type="Script" path="res://scripts/score_view.gd" id="10_y2a5q"]
+[ext_resource type="Script" path="res://scripts/scene_management.gd" id="11_4a060"]
+[ext_resource type="Script" path="res://scripts/game_object_utils.gd" id="12_yth0b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1xrb"]
+size = Vector2(20.7, 193)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_42jgc"]
+size = Vector2(824, 43)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ueakn"]
+radius = 44.0454
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_130jp"]
+size = Vector2(242, 605)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mt3nb"]
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_vvg17"]
+font_size = 64
+font_color = Color(0, 0, 0, 1)
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("pause_menu", "game_utils")]
+position = Vector2(134, 43)
+script = ExtResource("1_j2hm1")
+score_table = {
+"p1": NodePath("Control/p2_score"),
+"p2": NodePath("Control/p1_score")
+}
+pause_menu = NodePath("Control/PauseMenu")
+game_utils = NodePath("game_object_utils")
+
+[node name="game_object_utils" type="Node2D" parent="."]
+script = ExtResource("12_yth0b")
+
+[node name="p1_platform" type="CharacterBody2D" parent="." node_paths=PackedStringArray("state_machine")]
+position = Vector2(26, 310)
+script = ExtResource("1_tmvxg")
+state_machine = NodePath("StateMachine")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="p1_platform"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_h1xrb")
+
+[node name="Platform" type="Node2D" parent="p1_platform"]
+position = Vector2(-21, -301)
+
+[node name="Platform" type="Sprite2D" parent="p1_platform/Platform"]
+position = Vector2(20, 300)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="Platform2" type="Sprite2D" parent="p1_platform/Platform"]
+position = Vector2(20, 362)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="Platform3" type="Sprite2D" parent="p1_platform/Platform"]
+position = Vector2(20, 238)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="StateMachine" type="Node" parent="p1_platform" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_r5r0q")
+initial_state = NodePath("IdleState")
+
+[node name="IdleState" type="Node" parent="p1_platform/StateMachine" node_paths=PackedStringArray("state_machine", "moving_state", "platform")]
+script = ExtResource("4_ti3f0")
+state_machine = NodePath("..")
+moving_state = NodePath("../MovingState")
+platform = NodePath("../..")
+
+[node name="MovingState" type="Node" parent="p1_platform/StateMachine" node_paths=PackedStringArray("state_machine", "platform", "idle_state")]
+script = ExtResource("5_wfngb")
+state_machine = NodePath("..")
+platform = NodePath("../..")
+idle_state = NodePath("../IdleState")
+
+[node name="p2_platform" type="CharacterBody2D" parent="." node_paths=PackedStringArray("state_machine")]
+position = Vector2(708, 323)
+rotation = 3.14159
+script = ExtResource("1_tmvxg")
+state_machine = NodePath("StateMachine")
+action_prefix = "p2"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="p2_platform"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_h1xrb")
+
+[node name="Platform" type="Node2D" parent="p2_platform"]
+position = Vector2(-21, -301)
+
+[node name="Platform" type="Sprite2D" parent="p2_platform/Platform"]
+position = Vector2(20, 300)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="Platform2" type="Sprite2D" parent="p2_platform/Platform"]
+position = Vector2(20, 362)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="Platform3" type="Sprite2D" parent="p2_platform/Platform"]
+position = Vector2(20, 238)
+rotation = 1.5708
+texture = ExtResource("1_2l5nk")
+
+[node name="StateMachine" type="Node" parent="p2_platform" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_r5r0q")
+initial_state = NodePath("IdleState")
+
+[node name="IdleState" type="Node" parent="p2_platform/StateMachine" node_paths=PackedStringArray("state_machine", "moving_state", "platform")]
+script = ExtResource("4_ti3f0")
+state_machine = NodePath("..")
+moving_state = NodePath("../MovingState")
+platform = NodePath("../..")
+
+[node name="MovingState" type="Node" parent="p2_platform/StateMachine" node_paths=PackedStringArray("state_machine", "platform", "idle_state")]
+script = ExtResource("5_wfngb")
+state_machine = NodePath("..")
+platform = NodePath("../..")
+idle_state = NodePath("../IdleState")
+
+[node name="wall" type="Area2D" parent="."]
+position = Vector2(378, -27)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall"]
+position = Vector2(-3, 7)
+shape = SubResource("RectangleShape2D_42jgc")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="wall"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall/StaticBody2D"]
+position = Vector2(-3, 7)
+shape = SubResource("RectangleShape2D_42jgc")
+
+[node name="wall2" type="Area2D" parent="."]
+position = Vector2(374, 555)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="wall2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall2/StaticBody2D"]
+position = Vector2(-3, 7)
+shape = SubResource("RectangleShape2D_42jgc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall2"]
+position = Vector2(-3, 7)
+shape = SubResource("RectangleShape2D_42jgc")
+
+[node name="ball" type="CharacterBody2D" parent="."]
+position = Vector2(361, 110)
+script = ExtResource("6_tiq4j")
+initial_force = Vector2(-300, 150)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ball"]
+position = Vector2(1, -1)
+shape = SubResource("CircleShape2D_ueakn")
+
+[node name="Sprite2D" type="Sprite2D" parent="ball"]
+position = Vector2(1, -1)
+texture = ExtResource("6_bul4m")
+
+[node name="p1_goal_area" type="Area2D" parent="." node_paths=PackedStringArray("ball_spawn_point")]
+position = Vector2(-43, 203)
+script = ExtResource("9_qfmhi")
+gate_name = "p1"
+ball_spawn_point = NodePath("../ball_spawn_point")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="p1_goal_area"]
+position = Vector2(-111, 74.5)
+shape = SubResource("RectangleShape2D_130jp")
+
+[node name="p2_goal_area" type="Area2D" parent="." node_paths=PackedStringArray("ball_spawn_point")]
+position = Vector2(1009, 199)
+script = ExtResource("9_qfmhi")
+gate_name = "p2"
+ball_spawn_point = NodePath("../ball_spawn_point")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="p2_goal_area"]
+position = Vector2(-111, 74.5)
+shape = SubResource("RectangleShape2D_130jp")
+
+[node name="ball_spawn_point" type="Node2D" parent="."]
+position = Vector2(360, 110)
+
+[node name="Control" type="Control" parent="."]
+layout_direction = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="p1_score" type="Label" parent="Control" node_paths=PackedStringArray("label")]
+layout_mode = 1
+offset_top = 75.0
+offset_right = 40.0
+offset_bottom = 120.0
+text = "0"
+label_settings = SubResource("LabelSettings_mt3nb")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("10_y2a5q")
+label = NodePath(".")
+
+[node name="p2_score" type="Label" parent="Control" node_paths=PackedStringArray("label")]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 722.0
+offset_top = 75.0
+offset_right = 740.0
+offset_bottom = 120.0
+grow_horizontal = 0
+text = "0"
+label_settings = SubResource("LabelSettings_mt3nb")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("10_y2a5q")
+label = NodePath(".")
+
+[node name="PauseMenu" type="Control" parent="Control" node_paths=PackedStringArray("game_utils", "menu_root")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_4a060")
+game_utils = NodePath("../../game_object_utils")
+menu_root = NodePath(".")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 249.0
+offset_top = 60.0
+offset_right = 521.0
+offset_bottom = 438.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PauseMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 60
+
+[node name="Separator" type="Control" parent="Control/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "PAUSE"
+label_settings = SubResource("LabelSettings_vvg17")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/PauseMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="continue_game_button" type="Button" parent="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Continue Game"
+
+[node name="Separator" type="Control" parent="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="quit_game_button" type="Button" parent="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Quit"
+
+[connection signal="pause" from="game_object_utils" to="p1_platform" method="pause"]
+[connection signal="pause" from="game_object_utils" to="p2_platform" method="pause"]
+[connection signal="pause" from="game_object_utils" to="ball" method="pause"]
+[connection signal="unpause" from="game_object_utils" to="p1_platform" method="unpause"]
+[connection signal="unpause" from="game_object_utils" to="p2_platform" method="unpause"]
+[connection signal="unpause" from="game_object_utils" to="ball" method="unpause"]
+[connection signal="body_entered" from="wall" to="." method="_on_wall_body_entered"]
+[connection signal="body_entered" from="p1_goal_area" to="p1_goal_area" method="_on_body_entered"]
+[connection signal="goal" from="p1_goal_area" to="." method="_handle_goal"]
+[connection signal="body_entered" from="p2_goal_area" to="p2_goal_area" method="_on_body_entered"]
+[connection signal="goal" from="p2_goal_area" to="." method="_handle_goal"]
+[connection signal="pressed" from="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/continue_game_button" to="Control/PauseMenu" method="_on_continue_game_button_pressed"]
+[connection signal="pressed" from="Control/PauseMenu/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/quit_game_button" to="Control/PauseMenu" method="_quit_game"]
