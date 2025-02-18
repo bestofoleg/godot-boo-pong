@@ -177,6 +177,7 @@ position = Vector2(-43, 203)
 script = ExtResource("9_qfmhi")
 gate_name = "p1"
 ball_spawn_point = NodePath("../ball_spawn_point")
+platform_direction = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="p1_goal_area"]
 position = Vector2(-111, 74.5)
@@ -187,6 +188,7 @@ position = Vector2(1009, 199)
 script = ExtResource("9_qfmhi")
 gate_name = "p2"
 ball_spawn_point = NodePath("../ball_spawn_point")
+platform_direction = -1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="p2_goal_area"]
 position = Vector2(-111, 74.5)
@@ -208,8 +210,9 @@ grow_vertical = 2
 
 [node name="p1_score" type="Label" parent="Control" node_paths=PackedStringArray("label")]
 layout_mode = 1
+offset_left = 100.0
 offset_top = 75.0
-offset_right = 40.0
+offset_right = 140.0
 offset_bottom = 120.0
 text = "0"
 label_settings = SubResource("LabelSettings_mt3nb")
@@ -223,9 +226,9 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 722.0
+offset_left = 609.0
 offset_top = 75.0
-offset_right = 740.0
+offset_right = 627.0
 offset_bottom = 120.0
 grow_horizontal = 0
 text = "0"

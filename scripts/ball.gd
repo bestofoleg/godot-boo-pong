@@ -5,7 +5,7 @@ class_name ball
 @export var velocity_bonus: float = 1.05
 @export var velocity_vector_length_limit: float = 1500
 
-var is_wait_for_initial_impulse: bool = true
+var wait_for_impulse_from_player = "p1"
 
 const _random_velocity_bonus_range: Vector2 = Vector2(-5, 5)
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -26,9 +26,12 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if !_is_paused:
-		if is_wait_for_initial_impulse and Input.is_anything_pressed():
-			is_wait_for_initial_impulse = false
-			velocity = initial_force
+		if wait_for_impulse_from_player != null and Input.is_anything_pressed():
+			var is_down_pressed = Input.is_action_pressed(wait_for_impulse_from_player+"_platform_down")
+			var is_up_pressed = Input.is_action_pressed(wait_for_impulse_from_player+"_platform_up")
+			if  is_down_pressed or is_up_pressed:
+				wait_for_impulse_from_player = null
+				velocity = initial_force
 		var collision = move_and_collide(velocity * delta)
 		if collision:
 			var normal = collision.get_normal()

@@ -5,7 +5,7 @@ extends Node
 @export var game_utils: game_object_utils
 
 func _ready() -> void:
-	print(score_table)
+	pass
 
 
 func _input(event: InputEvent) -> void:
