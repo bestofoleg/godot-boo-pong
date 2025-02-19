@@ -1,9 +1,10 @@
 extends CharacterBody2D
-class_name platform
+class_name moving_platform
 
 @export var speed: float = 30
-@export var state_machine: platform_state_machine = null
+@export var state_machine: platform_state_machine
 @export var action_prefix: String = "p1"
+@export var npc_state: platform_state
 
 var initial_platform_position: Vector2 = Vector2.ZERO
 var _is_paused = false
@@ -23,12 +24,8 @@ func _process(delta: float) -> void:
 		state_machine._process(delta)
 	
 	
-func _physics_process(delta) -> void:
+func _physics_process(delta: float) -> void:
 	if !_is_paused:
 		velocity.x = 0
 		move_and_collide(velocity)
-	#move_and_slide()
-	#for i in get_slide_collision_count():
-		#var collision = get_slide_collision(i)
-		#if collision:
 			

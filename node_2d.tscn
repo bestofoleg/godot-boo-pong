@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c6cvo6lrd2i6p"]
+[gd_scene load_steps=20 format=3 uid="uid://c6cvo6lrd2i6p"]
 
 [ext_resource type="Texture2D" uid="uid://cpbr8eu4wg0c6" path="res://textures/platform.jpg" id="1_2l5nk"]
 [ext_resource type="Script" path="res://scripts/game_logic.gd" id="1_j2hm1"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/moving_platform_state.gd" id="5_wfngb"]
 [ext_resource type="Texture2D" uid="uid://cplfhv7v00agn" path="res://textures/ball.jpg" id="6_bul4m"]
 [ext_resource type="Script" path="res://scripts/ball.gd" id="6_tiq4j"]
+[ext_resource type="Script" path="res://scripts/npc_platform_state_look.gd" id="8_bvvnj"]
 [ext_resource type="Script" path="res://scripts/goal_area.gd" id="9_qfmhi"]
 [ext_resource type="Script" path="res://scripts/score_view.gd" id="10_y2a5q"]
 [ext_resource type="Script" path="res://scripts/scene_management.gd" id="11_4a060"]
@@ -32,7 +33,7 @@ font_size = 32
 font_size = 64
 font_color = Color(0, 0, 0, 1)
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("pause_menu", "game_utils")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("pause_menu", "game_utils", "right_platform")]
 position = Vector2(134, 43)
 script = ExtResource("1_j2hm1")
 score_table = {
@@ -41,6 +42,8 @@ score_table = {
 }
 pause_menu = NodePath("Control/PauseMenu")
 game_utils = NodePath("game_object_utils")
+platforms = Array[NodePath]([NodePath("p1_platform"), NodePath("p2_platform")])
+right_platform = NodePath("p2_platform")
 
 [node name="game_object_utils" type="Node2D" parent="."]
 script = ExtResource("12_yth0b")
@@ -48,7 +51,7 @@ script = ExtResource("12_yth0b")
 [node name="p1_platform" type="CharacterBody2D" parent="." node_paths=PackedStringArray("state_machine")]
 position = Vector2(26, 310)
 script = ExtResource("1_tmvxg")
-state_machine = NodePath("StateMachine")
+state_machine = NodePath("StateMachine1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="p1_platform"]
 position = Vector2(0, -0.5)
@@ -72,28 +75,29 @@ position = Vector2(20, 238)
 rotation = 1.5708
 texture = ExtResource("1_2l5nk")
 
-[node name="StateMachine" type="Node" parent="p1_platform" node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine1" type="Node" parent="p1_platform" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_r5r0q")
 initial_state = NodePath("IdleState")
 
-[node name="IdleState" type="Node" parent="p1_platform/StateMachine" node_paths=PackedStringArray("state_machine", "moving_state", "platform")]
+[node name="IdleState" type="Node" parent="p1_platform/StateMachine1" node_paths=PackedStringArray("state_machine", "moving_state", "moving_platform")]
 script = ExtResource("4_ti3f0")
 state_machine = NodePath("..")
 moving_state = NodePath("../MovingState")
-platform = NodePath("../..")
+moving_platform = NodePath("../..")
 
-[node name="MovingState" type="Node" parent="p1_platform/StateMachine" node_paths=PackedStringArray("state_machine", "platform", "idle_state")]
+[node name="MovingState" type="Node" parent="p1_platform/StateMachine1" node_paths=PackedStringArray("state_machine", "root_platform", "idle_state")]
 script = ExtResource("5_wfngb")
 state_machine = NodePath("..")
-platform = NodePath("../..")
+root_platform = NodePath("../..")
 idle_state = NodePath("../IdleState")
 
-[node name="p2_platform" type="CharacterBody2D" parent="." node_paths=PackedStringArray("state_machine")]
+[node name="p2_platform" type="CharacterBody2D" parent="." node_paths=PackedStringArray("state_machine", "npc_state")]
 position = Vector2(708, 323)
 rotation = 3.14159
 script = ExtResource("1_tmvxg")
-state_machine = NodePath("StateMachine")
+state_machine = NodePath("StateMachine2")
 action_prefix = "p2"
+npc_state = NodePath("StateMachine2/NpcState")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="p2_platform"]
 position = Vector2(0, -0.5)
@@ -117,21 +121,28 @@ position = Vector2(20, 238)
 rotation = 1.5708
 texture = ExtResource("1_2l5nk")
 
-[node name="StateMachine" type="Node" parent="p2_platform" node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine2" type="Node" parent="p2_platform" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_r5r0q")
 initial_state = NodePath("IdleState")
 
-[node name="IdleState" type="Node" parent="p2_platform/StateMachine" node_paths=PackedStringArray("state_machine", "moving_state", "platform")]
+[node name="IdleState" type="Node" parent="p2_platform/StateMachine2" node_paths=PackedStringArray("state_machine", "moving_state", "moving_platform")]
 script = ExtResource("4_ti3f0")
 state_machine = NodePath("..")
 moving_state = NodePath("../MovingState")
-platform = NodePath("../..")
+moving_platform = NodePath("../..")
 
-[node name="MovingState" type="Node" parent="p2_platform/StateMachine" node_paths=PackedStringArray("state_machine", "platform", "idle_state")]
+[node name="MovingState" type="Node" parent="p2_platform/StateMachine2" node_paths=PackedStringArray("state_machine", "root_platform", "idle_state")]
 script = ExtResource("5_wfngb")
 state_machine = NodePath("..")
-platform = NodePath("../..")
+root_platform = NodePath("../..")
 idle_state = NodePath("../IdleState")
+
+[node name="NpcState" type="Node" parent="p2_platform/StateMachine2" node_paths=PackedStringArray("state_machine", "root_platform", "idle_state", "target_ball")]
+script = ExtResource("8_bvvnj")
+state_machine = NodePath("..")
+root_platform = NodePath("../..")
+idle_state = NodePath("../IdleState")
+target_ball = NodePath("../../../ball")
 
 [node name="wall" type="Area2D" parent="."]
 position = Vector2(378, -27)

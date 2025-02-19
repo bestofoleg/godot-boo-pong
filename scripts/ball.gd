@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 			var degs = rad_to_deg(Vector2.UP.angle_to(reflection_vector))
 			var degs180 = fmod(degs, 180)
 			
-			if abs(degs180) > 135 :
+			if abs(degs180) > 135:
 				reflection_vector.y = -0.4 * reflection_vector.length()
 				reflection_vector.x = 1.4 * reflection_vector.length()
 			elif abs(degs180) < 45:

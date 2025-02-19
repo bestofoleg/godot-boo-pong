@@ -16,6 +16,10 @@ func _on_start_game_button_pressed() -> void:
 	_start_game("game_for_two")
 	
 	
+func _on_start_game_for_one_button_pressed() -> void:
+	_start_game("game_for_one")
+
+	
 func _quit_game() -> void:
 	get_tree().quit()
 

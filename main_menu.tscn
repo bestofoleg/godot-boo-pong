@@ -64,12 +64,20 @@ size_flags_horizontal = 4
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="start_game_button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="start_game_for_two_button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Start Game"
+text = "Start Game For Two"
 
 [node name="Separator" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="start_game_for_one_button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Start Game For One"
+
+[node name="Separator2" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="quit_game_button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
@@ -77,5 +85,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Quit"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/start_game_button" to="." method="_on_start_game_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/start_game_for_two_button" to="." method="_on_start_game_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/start_game_for_one_button" to="." method="_on_start_game_for_one_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/quit_game_button" to="." method="_quit_game"]
